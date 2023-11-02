@@ -6,10 +6,11 @@ cad = gmsh.model.occ
 msh = gmsh.model.mesh
 
 
-@model("capacitor", dim=2, show_gui=True, finalize=True, options={"Mesh.MeshSizeFactor": 0.4})
+@model("capacitor", dim=2, show_gui=True, finalize=True, options={"Mesh.MeshSizeFactor": 1})
 def generate_mesh(d: float, l: float, h: float, r: float):
-    plate1 = add_plate(d, l, h)
-    plate2 = add_plate(-d, l, -h)
+    plate1 = add_thin_plate(d, l)
+    plate2 = add_thin_plate(-d, l)
+
     air = cad.add_circle(0, 0, 0, r)
     air = cad.add_curve_loop([air])
     cad.add_plane_surface([air, plate1, plate2])
@@ -33,3 +34,17 @@ def add_plate(d: float, l: float, h: float) -> int:
     msh.set_transfinite_curve(l1, 30)
     msh.set_transfinite_curve(l3, 30)
     return cad.add_curve_loop([l1, l2, l3, l4])
+
+
+def add_thin_plate(d: float, l: float) -> int:
+    """Adds an infinitely thin plate of the capacitor to the geometry.
+    :return: The tag of the curve loop.
+    """
+
+    p1 = cad.add_point(-l / 2, d / 4, 0)
+    p2 = cad.add_point(l / 2, d / 4, 0)
+    l1 = cad.add_line(p1, p2)
+
+    cad.synchronize()
+    msh.set_transfinite_curve(l1, 30)
+    return cad.add_curve_loop([l1, -l1])
