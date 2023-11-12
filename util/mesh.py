@@ -1,16 +1,15 @@
 import sys
 from functools import wraps
-from typing import Dict, Final
+from typing import Dict
 
 import gmsh
 
 
-def model(name: str, dim: int = 3, show_gui: bool = False, finalize: bool = False, options: Dict[str, float] = None):
+def model(name: str, dim: int = 3, finalize: bool = False, options: Dict[str, float] = None):
     """Indicates that the function generates a gmsh model.
 
     :param name The name of the gmsh model.
     :param dim: Dimension of the mesh.
-    :param show_gui: Whether to show the gui.
     :param finalize: Whether to finalize the gmsh API.
     :param options: Options that get passed to 'gmsh.option.set_number'.
     """
@@ -34,7 +33,7 @@ def model(name: str, dim: int = 3, show_gui: bool = False, finalize: bool = Fals
             gmsh.model.occ.synchronize()
             gmsh.model.mesh.generate(dim)
 
-            if '-nopopup' not in sys.argv and show_gui:
+            if '-nopopup' not in sys.argv:
                 gmsh.fltk.run()
 
             if finalize:

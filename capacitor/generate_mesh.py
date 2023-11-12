@@ -6,7 +6,7 @@ cad = gmsh.model.occ
 msh = gmsh.model.mesh
 
 
-@model("capacitor", dim=2, show_gui=True, finalize=True, options={"Mesh.MeshSizeFactor": 1})
+@model("capacitor", dim=2, finalize=True, options={"Mesh.MeshSizeFactor": 1})
 def generate_mesh(d: float, l: float, h: float, r: float):
     """
     Generates the capacitor mesh.
