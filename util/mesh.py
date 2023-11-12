@@ -4,13 +4,6 @@ from typing import Dict, Final
 
 import gmsh
 
-DefaultOptions: Final[Dict[str, float]] = {
-    # "General.Verbosity": 0,
-    "Mesh.MeshSizeFactor": 0.8,
-    "Mesh.MshFileVersion": 4.1
-}
-"""The default options for gmsh initialization."""
-
 
 def model(name: str, dim: int = 3, show_gui: bool = False, finalize: bool = False, options: Dict[str, float] = None):
     """Indicates that the function generates a gmsh model.
@@ -23,7 +16,7 @@ def model(name: str, dim: int = 3, show_gui: bool = False, finalize: bool = Fals
     """
 
     if options is None:
-        options = DefaultOptions
+        options = dict()
 
     def _model(func):
 
