@@ -8,8 +8,16 @@ msh = gmsh.model.mesh
 
 @model("capacitor", dim=2, show_gui=True, finalize=True, options={"Mesh.MeshSizeFactor": 1})
 def generate_mesh(d: float, l: float, h: float, r: float):
-    plate1 = add_thin_plate(d, l)
-    plate2 = add_thin_plate(-d, l)
+    """
+    Generates the capacitor mesh.
+    :param d: Distance of the capacitor plates.
+    :param l: Length of the capacitor plate.
+    :param h: Height of each capacitor plate.
+    :param r: Radius of domain.
+    """
+
+    plate1 = add_thin_plate(d, l) if h == 0 else add_plate(d, l, h)
+    plate2 = add_thin_plate(-d, l) if h == 0 else add_plate(-d, l, -h)
 
     air = cad.add_circle(0, 0, 0, r)
     air = cad.add_curve_loop([air])
@@ -41,8 +49,8 @@ def add_thin_plate(d: float, l: float) -> int:
     :return: The tag of the curve loop.
     """
 
-    p1 = cad.add_point(-l / 2, d / 4, 0)
-    p2 = cad.add_point(l / 2, d / 4, 0)
+    p1 = cad.add_point(-l / 2, d / 2, 0)
+    p2 = cad.add_point(l / 2, d / 2, 0)
     l1 = cad.add_line(p1, p2)
 
     cad.synchronize()
