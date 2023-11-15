@@ -10,10 +10,5 @@ def mass_node_local(nodes: np.ndarray) -> np.ndarray:
     :return: Local 3x3 mass matrix.
     """
 
-    S = triangle_area(nodes)
-    mat = np.zeros((3, 3))
-    for i in range(3):
-        for j in range(3):
-            mat[i, j] = S / 6 if i == j else S / 12
-
-    return mat
+    val = triangle_area(nodes) / 12
+    return np.full((3, 3), val) + np.diag([val, val, val])
