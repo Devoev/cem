@@ -1,7 +1,7 @@
 import numpy as np
 
 
-def triangle_area(nodes: np.ndarray) -> float:
+def area_triangle_2d(nodes: np.ndarray) -> float:
     """
     Computes the area of a triangle in 2D.
     :param nodes: Nodes of the triangle.

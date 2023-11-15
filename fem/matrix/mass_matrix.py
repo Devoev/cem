@@ -1,6 +1,6 @@
 import numpy as np
 
-from fem.mesh.geo import triangle_area
+from math.geo import area_triangle_2d
 
 
 def mass_node_local(nodes: np.ndarray) -> np.ndarray:
@@ -10,12 +10,16 @@ def mass_node_local(nodes: np.ndarray) -> np.ndarray:
     :return: Local 3x3 mass matrix.
     """
 
-    val = triangle_area(nodes) / 12
+    val = area_triangle_2d(nodes) / 12
     return np.array([
         [2*val, val, val],
         [val, 2*val, val],
         [val, val, 2*val]
     ])
+
+
+def mass_edge_local(nodes: np.ndarray) -> np.ndarray:
+    pass
 
 
 def mass_vol_local(nodes: np.ndarray) -> float:
@@ -25,4 +29,4 @@ def mass_vol_local(nodes: np.ndarray) -> float:
     :return: Local scalar mass matrix.
     """
 
-    return 1/triangle_area(nodes)
+    return 1/area_triangle_2d(nodes)
