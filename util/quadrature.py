@@ -2,7 +2,7 @@ from typing import Callable
 
 import numpy as np
 
-from math.geo import area_triangle_2d
+from util.geo import area_triangle_2d
 
 
 def int_triangle_2d(fun: Callable[[np.ndarray], float], nodes: np.ndarray) -> float:
@@ -13,9 +13,7 @@ def int_triangle_2d(fun: Callable[[np.ndarray], float], nodes: np.ndarray) -> fl
     :return: Value of the integral.
     """
 
-    a0 = nodes[:, 0]
-    a1 = nodes[:, 1]
-    a2 = nodes[:, 2]
+    a0, a1, a2 = nodes.T
     m1 = (a0 + a1)/2
     m2 = (a1 + a2)/2
     m3 = (a2 + a0)/2

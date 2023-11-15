@@ -1,6 +1,6 @@
 import numpy as np
 
-from math.geo import area_triangle_2d
+from util.geo import area_triangle_2d
 
 
 def mass_node_local(nodes: np.ndarray) -> np.ndarray:
