@@ -19,6 +19,11 @@ def mass_node_local(nodes: np.ndarray) -> np.ndarray:
 
 
 def mass_edge_local(nodes: np.ndarray) -> np.ndarray:
+    """
+    Creates the local mass matrix of edge basis functions.
+    :param nodes: The triangle nodes in 2D. Matrix of size 2x3.
+    :return: Local 3x3 mass matrix.
+    """
     pass
 
 
