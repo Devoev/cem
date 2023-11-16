@@ -11,7 +11,7 @@ def stiffness_node_local(nodes: np.ndarray) -> np.ndarray:
     """
 
     a0, a1, a2 = nodes.T
-    S = area_triangle_2d(nodes)
+    S = area_triangle_2d(nodes)                         # Triangle area = jacobian determinant
     J = np.vstack([a1 - a0, a2 - a0])                   # Jacobian
     G_inv = np.linalg.inv(J.T @ J)                      # Inverse gram matrix
     grad_b = np.array([[-1, -1], [1, 0], [0, 1]]).T     # Gradients of nodal basis in reference triangle
