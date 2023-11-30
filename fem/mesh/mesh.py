@@ -7,9 +7,11 @@ import numpy as np
 
 msh = gmsh.model.mesh
 
+Point2D = Tuple[float, float]
+
 
 @dataclass
-class mesh:
+class Mesh:
     """An object for handling the mesh elements and nodes.
 
     node_tags_group: A matrix of size (N,G). Indicates, whether the node is included in the physical group or not.
@@ -46,7 +48,7 @@ class mesh:
         return node_tag
 
     @cached_property
-    def nodes(self) -> Dict[int, Tuple[float, float]]:
+    def nodes(self) -> Dict[int, Point2D]:
         """A node tag-coord dict."""
         return dict(zip(self.node_tags, self.node_coords))
 
@@ -158,9 +160,9 @@ class mesh:
             n1, n2, n3 = self.node_coords[nodes]
 
             # a,b,c coefficients
-            a1, b1, c1 = mesh.coeffs_of(n2, n3)  # n1
-            a2, b2, c2 = mesh.coeffs_of(n3, n1)  # n2
-            a3, b3, c3 = mesh.coeffs_of(n1, n2)  # n3
+            a1, b1, c1 = Mesh.coeffs_of(n2, n3)  # n1
+            a2, b2, c2 = Mesh.coeffs_of(n3, n1)  # n2
+            a3, b3, c3 = Mesh.coeffs_of(n1, n2)  # n3
 
             # Set values of a,b,c vectors
             a[i, :] = np.array([a1, a2, a3])
@@ -169,7 +171,7 @@ class mesh:
         return a, b, c
 
 
-def create_mesh() -> mesh:
+def create_mesh() -> Mesh:
     """
     Creates an instance of a Mesh object.
     """
@@ -182,4 +184,4 @@ def create_mesh() -> mesh:
         dim, tag = group
         nodes, _ = msh.get_nodes_for_physical_group(dim, tag)
         node_tags_groups[nodes - 1, i] = 1
-    return mesh(node_tag, node, element_types, element_tags, node_tags_elements, node_tags_groups)
+    return Mesh(node_tag, node, element_types, element_tags, node_tags_elements, node_tags_groups)
