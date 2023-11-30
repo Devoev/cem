@@ -19,13 +19,13 @@ def mass_node(msh: Mesh2D) -> sp.spmatrix:
     cols = np.zeros(n, dtype='int')     # Column indices for the entries
 
     for e in range(msh.E):
-        idx = msh.elems_to_nodes[e]
-        idx_e = np.arange(9*e,9*(e+1))
+        nodes = msh.elems_to_nodes[e]
+        idx = np.arange(9*e,9*(e+1))
 
-        rows[idx_e] = np.repeat(idx, 3)
-        cols[idx_e] = np.reshape([idx, idx, idx], 9)
+        rows[idx] = np.repeat(nodes, 3)
+        cols[idx] = np.reshape([nodes, nodes, nodes], 9)
 
-        vals[idx_e] = mass_node_local(msh.elems[e].T).flatten()
+        vals[idx] = mass_node_local(msh.elems[e].T).flatten()
 
     return sp.coo_matrix((vals, (rows, cols)), shape=(N, N))
 
