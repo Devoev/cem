@@ -1,12 +1,12 @@
 import gmsh
 
-from util.mesh import model
+from util.gmsh_model import gmsh_model
 
 cad = gmsh.model.occ
 msh = gmsh.model.mesh
 
 
-@model("capacitor", dim=2, finalize=True, options={"Mesh.MeshSizeFactor": 1})
+@gmsh_model("capacitor", dim=2, finalize=False, options={"Mesh.MeshSizeFactor": 1})
 def generate_mesh(d: float, l: float, h: float, r: float):
     """
     Generates the capacitor mesh.
