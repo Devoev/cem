@@ -19,10 +19,11 @@ def mass_node(msh: Mesh) -> sp.spmatrix:
     cols = np.zeros(n, dtype='int')     # Column indices for the entries
 
     for e in range(msh.num_elems):
-        idx = Mesh.elems[e]
-        rows[9*e:9*(e+1)] = np.repeat(idx, 3)
-        cols[9*e:9*(e+1)] = np.reshape([idx, idx, idx], 9)
-        mat[9*e:9*(e+1)] = mass_node_local(msh.elem_nodes[9*e:9*(e+1)]).flatten()
+        idx = msh.elems[e]
+        idx_e = np.arange(9*e,9*(e+1))
+        rows[idx_e] = np.repeat(idx, 3)
+        cols[idx_e] = np.reshape([idx, idx, idx], 9)
+        mat[idx_e] = mass_node_local(msh.elem_nodes[idx_e]).flatten()
 
     return sp.csr_matrix((mat, (rows, cols)), shape=(m, m))
 
