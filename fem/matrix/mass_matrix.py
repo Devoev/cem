@@ -1,34 +1,33 @@
 import numpy as np
 import scipy.sparse as sp
 
-from fem.mesh.mesh import Mesh
+from fem.mesh.mesh_2d import Mesh2D
 from util.geo import area_triangle_2d
 
 
-def mass_node(msh: Mesh) -> sp.spmatrix:
+def mass_node(msh: Mesh2D) -> sp.spmatrix:
     """
     Creates the global mass matrix of nodal basis functions.
     :param msh: Mesh object.
     :return: Global mass matrix.
     """
 
-    n = msh.num_elems * 9               # Amount of matrix entries
-    m = msh.num_node                    # Matrix dimension
+    n = 9 * msh.E                       # Amount of matrix entries
+    N = msh.N                           # Matrix dimension
     vals = np.zeros(n)                  # Nonzero values of tge matrix
     rows = np.zeros(n, dtype='int')     # Row indices for the entries
     cols = np.zeros(n, dtype='int')     # Column indices for the entries
 
-    for e in range(msh.num_elems):
-        idx = msh.elems[e]
+    for e in range(msh.E):
+        idx = msh.elems_to_nodes[e]
         idx_e = np.arange(9*e,9*(e+1))
 
         rows[idx_e] = np.repeat(idx, 3)
         cols[idx_e] = np.reshape([idx, idx, idx], 9)
 
-        nodes = msh.elems[e,:]
-        vals[idx_e] = mass_node_local(msh.node_coords[nodes].T).flatten()
+        vals[idx_e] = mass_node_local(msh.elems[e].T).flatten()
 
-    return sp.coo_matrix((vals, (rows, cols)), shape=(m, m))
+    return sp.coo_matrix((vals, (rows, cols)), shape=(N, N))
 
 
 def mass_node_local(nodes: np.ndarray) -> np.ndarray:
