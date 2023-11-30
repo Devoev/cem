@@ -13,19 +13,22 @@ def mass_node(msh: Mesh) -> sp.spmatrix:
     """
 
     n = msh.num_elems * 9               # Amount of matrix entries
-    m = msh.num_node                    # Dimension of Knu matrix
-    mat = np.zeros(n)                   # Nonzero entries of the Knu matrix
+    m = msh.num_node                    # Matrix dimension
+    vals = np.zeros(n)                  # Nonzero values of tge matrix
     rows = np.zeros(n, dtype='int')     # Row indices for the entries
     cols = np.zeros(n, dtype='int')     # Column indices for the entries
 
     for e in range(msh.num_elems):
         idx = msh.elems[e]
         idx_e = np.arange(9*e,9*(e+1))
+
         rows[idx_e] = np.repeat(idx, 3)
         cols[idx_e] = np.reshape([idx, idx, idx], 9)
-        mat[idx_e] = mass_node_local(msh.elem_nodes[idx_e]).flatten()
 
-    return sp.csr_matrix((mat, (rows, cols)), shape=(m, m))
+        nodes = msh.elems[e,:]
+        vals[idx_e] = mass_node_local(msh.node_coords[nodes].T).flatten()
+
+    return sp.coo_matrix((vals, (rows, cols)), shape=(m, m))
 
 
 def mass_node_local(nodes: np.ndarray) -> np.ndarray:
