@@ -5,7 +5,7 @@ from typing import Dict
 import gmsh
 
 
-def model(name: str, dim: int = 3, finalize: bool = False, options: Dict[str, float] = None):
+def gmsh_model(name: str, dim: int = 3, finalize: bool = False, options: Dict[str, float] = None):
     """Indicates that the function generates a gmsh model.
 
     :param name The name of the gmsh model.
