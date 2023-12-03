@@ -1,6 +1,7 @@
 import numpy as np
 import scipy.sparse as sp
 
+from fem.matrix.build_nodal_mat import build_nodal_mat
 from fem.mesh.mesh_2d import Mesh2D
 from util.geo import area_triangle_2d
 
@@ -12,22 +13,7 @@ def mass_node(msh: Mesh2D) -> sp.spmatrix:
     :return: Global mass matrix.
     """
 
-    n = 9 * msh.E                       # Amount of matrix entries
-    N = msh.N                           # Matrix dimension
-    vals = np.zeros(n)                  # Nonzero values of tge matrix
-    rows = np.zeros(n, dtype='int')     # Row indices for the entries
-    cols = np.zeros(n, dtype='int')     # Column indices for the entries
-
-    for e in range(msh.E):
-        nodes = msh.elems_to_nodes[e]
-        idx = np.arange(9*e,9*(e+1))
-
-        rows[idx] = np.repeat(nodes, 3)
-        cols[idx] = np.reshape([nodes, nodes, nodes], 9)
-
-        vals[idx] = mass_node_local(msh.elems[e].T).flatten()
-
-    return sp.coo_matrix((vals, (rows, cols)), shape=(N, N))
+    return build_nodal_mat(msh, lambda e: mass_node_local(msh.elems[e].T))
 
 
 def mass_node_local(nodes: np.ndarray) -> np.ndarray:
