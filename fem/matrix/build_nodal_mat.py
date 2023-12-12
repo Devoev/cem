@@ -6,7 +6,7 @@ from fem.mesh.mesh_2d import Mesh2D
 import scipy.sparse as sp
 
 
-def build_nodal_mat(msh: Mesh2D, build_local_mat: Callable[[int], np.ndarray]) -> sp.spmatrix:
+def build_nodal_mat(msh: Mesh2D, build_local_mat: Callable[[int], np.ndarray]) -> sp.coo_matrix:
     """
     Creates a global matrix of nodal basis functions.
     :param msh: Mesh object.

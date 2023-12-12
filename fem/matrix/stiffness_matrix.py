@@ -6,7 +6,7 @@ from fem.mesh.mesh_2d import Mesh2D
 from util.geo import area_triangle_2d
 
 
-def stiffness_node(msh: Mesh2D) -> sp.spmatrix:
+def stiffness_node(msh: Mesh2D) -> sp.coo_matrix:
     """
     Creates the global stiffness matrix of nodal basis functions.
     :param msh: Mesh object.

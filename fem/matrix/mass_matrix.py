@@ -6,7 +6,7 @@ from fem.mesh.mesh_2d import Mesh2D
 from util.geo import area_triangle_2d
 
 
-def mass_node(msh: Mesh2D) -> sp.spmatrix:
+def mass_node(msh: Mesh2D) -> sp.coo_matrix:
     """
     Creates the global mass matrix of nodal basis functions.
     :param msh: Mesh object.
@@ -37,7 +37,7 @@ def mass_edge_local(nodes: np.ndarray) -> np.ndarray:
     :param nodes: The triangle nodes in 2D. Matrix of size ``(2,3)``.
     :return: Local ``(3,3)`` mass matrix.
     """
-    pass
+    pass  # TODO: Add implementation
 
 
 def mass_vol_local(nodes: np.ndarray) -> float:
