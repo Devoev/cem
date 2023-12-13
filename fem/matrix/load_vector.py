@@ -13,7 +13,7 @@ def load_node(msh: Mesh2D, f: Callable[[np.ndarray], float], q: int):
     :param msh: Mesh object.
     :param f: Right hand side function.
     :param q: Order of integration.
-    :return: Global load vector.
+    :return: Global load vector of size ``(N)``.
     """
     pass
 
