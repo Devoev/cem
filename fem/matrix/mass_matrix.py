@@ -43,14 +43,11 @@ def mass_edge_local(nodes: np.ndarray) -> np.ndarray:
     nodes_ref = np.array([[0,0],[1,0],[0,1]])
     S = area_triangle_2d(nodes)
     G_inv = gram_inv(nodes)
-    bij = basis_edge_ref()
-    mat = np.zeros((3,3))
+    b = basis_edge_ref()
 
-    for i in range(3):
-        for j in range(3):
-            mat[i,j] = 2 * S * int_triangle_2d(lambda p: np.dot(bij[i](p), G_inv @ bij[j](p)), nodes_ref)
-
-    return mat
+    # TODO: Remove factor of 2?
+    mat_elems = [int_triangle_2d(lambda p: b[i](p).T @ G_inv @ b[j](p), nodes_ref) for i,j in np.ndindex((3,3))]
+    return 2 * S * np.array(mat_elems).reshape((3,3))
 
 
 def mass_vol_local(nodes: np.ndarray) -> float:
