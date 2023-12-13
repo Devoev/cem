@@ -17,6 +17,7 @@ class Mesh2D:
 
     def __post_init__(self):
         self.N = self.nodes.shape[0]
+        self.E = self.edges_to_nodes.shape[0]
         self.T = self.elems_to_nodes.shape[0]
 
     @cached_property
@@ -28,9 +29,9 @@ class Mesh2D:
     def edges_to_nodes(self):
         """Edge to node connection matrix. Array of size ``(E,2)``."""
         edges = np.concatenate([
-            self.elems_to_nodes[:, [0,1]],
-            self.elems_to_nodes[:, [1,2]],
-            self.elems_to_nodes[:, [2,0]]
+            self.elems_to_nodes[:,[0,1]],
+            self.elems_to_nodes[:,[1,2]],
+            self.elems_to_nodes[:,[2,0]]
         ])
         return np.unique(np.sort(edges), axis=0)
 
@@ -39,10 +40,23 @@ class Mesh2D:
         """Edge coordinate array of size ``(E,2,2)``."""
         return self.nodes[self.edges_to_nodes]
 
-    @cached_property
-    def elems_to_edges(self):
-        """Element to edge connection matrix. Array of size ``(T,3)``."""
-        return  # TODO
+    def find_edge_by_nodes(self, n1: int, n2: int) -> int:
+        """
+        Finds the index of the edge from node ``n1`` to node ``n2``. Automatically sorts nodes in increasing order.
+        :return: Index of the edge. If edge doesn't exist ``-1``.
+        """
+
+        edge = np.argwhere((sorted((n1,n2)) == self.edges_to_nodes).all(axis=1))
+        return -1 if edge.size == 0 else edge[0,0]
+
+    def find_edges_by_elem(self, t: int):
+        """
+        Finds the edges of the element ``t``.
+        :return: Indices of elements.
+        """
+
+        n1, n2, n3 = self.elems_to_nodes[t]
+        return self.find_edge_by_nodes(n1, n2), self.find_edge_by_nodes(n2, n3), self.find_edge_by_nodes(n3, n1)
 
 
 def make_mesh() -> Mesh2D:
