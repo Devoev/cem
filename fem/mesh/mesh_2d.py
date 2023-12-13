@@ -34,6 +34,11 @@ class Mesh2D:
         ])
         return np.unique(np.sort(edges), axis=0)
 
+    @cached_property
+    def edges(self):
+        """Edge coordinate array of size ``(E,2,2)``"""
+        return self.nodes[self.edges_to_nodes]
+
 
 def make_mesh() -> Mesh2D:
     """Creates an instance of a ``Mesh2D`` object using the currently active ``gmsh`` instance."""
