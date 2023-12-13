@@ -21,23 +21,35 @@ def int_triangle_2d(fun: Callable[[np.ndarray], float], nodes: np.ndarray) -> fl
     return S/3 * (fun(m1) + fun(m2) + fun(m3))
 
 
-def gauss_quad_ref_triangle_2d(p: int) -> Tuple[np.ndarray, np.ndarray]:
+def int_ref_triangle_2d(fun: Callable[[np.ndarray], float], q: int) -> float:
+    """
+    Computes the integral on the reference triangle using `Gauss` quadrature.
+    :param fun: Function to integrate.
+    :param q: Order of quadrature.
+    :return: Value of the integral.
+    """
+
+    x,w = gauss_quad_ref_triangle_2d(q)
+    return sum([w[i] * fun(x[i]) for i in range(w.size)])
+
+
+def gauss_quad_ref_triangle_2d(q: int) -> Tuple[np.ndarray, np.ndarray]:
     """
     Computes the knots ``x`` and weights ``w`` of the `Gauss` quadrature on the reference triangle.
-    :param p: Order of quadrature.
+    :param q: Order of quadrature.
     :return: Knots ``x`` and weights ``w``
     """
 
-    if p == 1:
-        x = [-1/3, -1/3]
+    if q == 1:
+        x = [[-1/3, -1/3]]
         w = [2]
-    elif p == 2:
+    elif q == 2:
         x = [[-2/3,-2/3],[-2/3,1/3],[ 1/3,-2/3]]
         w = [2/3,2/3,2/3]
-    elif p == 3:
+    elif q == 3:
         x = [[-1/3, -1/3],[-0.6, -0.6],[-0.6,  0.2],[ 0.2, -0.6]]
         w = [-1.125,1.041666666666667,1.041666666666667,1.041666666666667]
-    elif p == 4:
+    elif q == 4:
         x = [[-0.108103018168070, -0.108103018168070],
              [-0.108103018168070, -0.783793963663860],
              [-0.783793963663860, -0.108103018168070],
@@ -50,7 +62,7 @@ def gauss_quad_ref_triangle_2d(p: int) -> Tuple[np.ndarray, np.ndarray]:
              0.219903487310644,
              0.219903487310644,
              0.219903487310644]
-    elif p == 5:
+    elif q == 5:
         x = [[-0.333333333333333, -0.333333333333333],
              [-0.059715871789770, -0.059715871789770],
              [-0.059715871789770, -0.880568256420460],
@@ -66,6 +78,6 @@ def gauss_quad_ref_triangle_2d(p: int) -> Tuple[np.ndarray, np.ndarray]:
              0.251878361089654,
              0.251878361089654]
     else:
-        raise Exception(f"numerical integration of order {p} not implemented")
+        raise Exception(f"numerical integration of order {q} not implemented")
 
     return (np.array(x) + 1) / 2, np.array(w)/4
