@@ -4,7 +4,7 @@ import scipy.sparse as sp
 from fem.basis.basis_edge import basis_edge_ref
 from fem.matrix.build_nodal_mat import build_nodal_mat
 from fem.mesh.mesh_2d import Mesh2D
-from util.geo import area_triangle_2d
+from util.geo import area_triangle_2d, gram_inv
 from util.quadrature import int_triangle_2d
 
 
@@ -40,11 +40,9 @@ def mass_edge_local(nodes: np.ndarray) -> np.ndarray:
     :return: Local ``(3,3)`` mass matrix.
     """
 
-    a0, a1, a2 = nodes
     nodes_ref = np.array([[0,0],[1,0],[0,1]])
-    S = area_triangle_2d(nodes)                     # Triangle area = jacobian determinant
-    J = np.vstack([a1 - a0, a2 - a0]).T             # Jacobian
-    G_inv = np.linalg.inv(J.T @ J)                  # Gram matrix
+    S = area_triangle_2d(nodes)
+    G_inv = gram_inv(nodes)  # TODO: transpose this?
     bij = basis_edge_ref()
     mat = np.zeros((3,3))
 

@@ -11,12 +11,10 @@ if __name__ == '__main__':
     generate_mesh(8, 10, 0, 15)
     msh = make_mesh()
 
-    nodes = np.array([[0,0], [1,0], [0,1]])
-    # nodes = np.array([[0,0], [2,0], [2,6]]).T
+    # nodes = np.array([[0,0], [1,0], [0,1]])
+    nodes = np.array([[0,0], [2,0], [2,6]])
 
     load_vec = load_node_local(lambda p: 1, nodes, 1)
 
     m_node_l = mass_node_local(nodes)
-    m_edge_ = mass_edge_local(nodes)
-
-    m_node = mass_node(msh)
+    m_edge_l = mass_edge_local(nodes)
