@@ -15,7 +15,8 @@ if __name__ == '__main__':
     # nodes = np.array([[0,0], [2,0], [2,6]]).T
 
     load_vec = load_node_local(lambda p: 1, nodes, 1)
-    print(np.array([[-1, -1], [1, 0], [0, 1]]).T.shape)
 
-    m_node = mass_node_local(nodes)
-    m_edge = mass_edge_local(nodes)
+    m_node_l = mass_node_local(nodes)
+    m_edge_ = mass_edge_local(nodes)
+
+    m_node = mass_node(msh)

@@ -1,8 +1,7 @@
-from typing import List, Callable
-
 import numpy as np
 import scipy.sparse as sp
 
+from fem.basis.basis_edge import basis_edge_ref
 from fem.matrix.build_nodal_mat import build_nodal_mat
 from fem.mesh.mesh_2d import Mesh2D
 from util.geo import area_triangle_2d
@@ -16,7 +15,7 @@ def mass_node(msh: Mesh2D) -> sp.coo_matrix:
     :return: Global mass matrix.
     """
 
-    return build_nodal_mat(msh, lambda e: mass_node_local(msh.elems[e].T))
+    return build_nodal_mat(msh, lambda e: mass_node_local(msh.elems[e]))
 
 
 def mass_node_local(nodes: np.ndarray) -> np.ndarray:
@@ -46,20 +45,12 @@ def mass_edge_local(nodes: np.ndarray) -> np.ndarray:
     S = area_triangle_2d(nodes)                     # Triangle area = jacobian determinant
     J = np.vstack([a1 - a0, a2 - a0]).T             # Jacobian
     G_inv = np.linalg.inv(J.T @ J)                  # Gram matrix
-    grad_b = np.array([[-1, -1], [1, 0], [0, 1]])   # Gradients of nodal basis in reference triangle
-
-    b: List[Callable[[np.ndarray], float]] = [lambda p: 1 - p[0] - p[1], lambda p: p[0], lambda p: p[1]]
+    bij = basis_edge_ref()
     mat = np.zeros((3,3))
+
     for i in range(3):
         for j in range(3):
-            def bij(l: int, p: np.ndarray) -> np.ndarray:
-                k = (l+1) % 3
-                return b[l](p) * grad_b[k,:] - b[k](p) * grad_b[l,:]
-
-            def fun(p: np.ndarray) -> float:
-                return np.dot(bij(i, p), G_inv @ bij(j, p))
-
-            mat[i,j] = 2 * S * int_triangle_2d(fun, nodes_ref)
+            mat[i,j] = 2 * S * int_triangle_2d(lambda p: np.dot(bij[i](p), G_inv @ bij[j](p)), nodes_ref)
 
     return mat
 
