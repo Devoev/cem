@@ -42,7 +42,7 @@ def mass_edge_local(nodes: np.ndarray) -> np.ndarray:
 
     nodes_ref = np.array([[0,0],[1,0],[0,1]])
     S = area_triangle_2d(nodes)
-    G_inv = gram_inv(nodes)  # TODO: transpose this?
+    G_inv = gram_inv(nodes)
     bij = basis_edge_ref()
     mat = np.zeros((3,3))
 

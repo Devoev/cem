@@ -25,7 +25,7 @@ def stiffness_node_local(nodes: np.ndarray) -> np.ndarray:
     """
 
     S = area_triangle_2d(nodes)
-    G_inv = gram_inv(nodes)  # TODO: transpose this?
+    G_inv = gram_inv(nodes)
     grad_b = basis_node_ref_grad()
 
     return S * grad_b.T @ G_inv @ grad_b
