@@ -22,7 +22,7 @@ def mass_node(msh: Mesh2D) -> sp.coo_matrix:
 def mass_node_local(nodes: np.ndarray) -> np.ndarray:
     """
     Creates the local mass matrix of nodal basis functions.
-    :param nodes: The triangle nodes in 2D. Matrix of size ``(2,3)``.
+    :param nodes: The triangle nodes in 2D. Matrix of size ``(3,2)``.
     :return: Local ``(3,3)`` mass matrix.
     """
 
@@ -42,8 +42,8 @@ def mass_edge_local(nodes: np.ndarray) -> np.ndarray:
     """
 
     a0, a1, a2 = nodes
-    nodes_ref = np.array([[0,0],[1,0],[0,1]]).T
-    S = area_triangle_2d(nodes.T)                   # Triangle area = jacobian determinant
+    nodes_ref = np.array([[0,0],[1,0],[0,1]])
+    S = area_triangle_2d(nodes)                     # Triangle area = jacobian determinant
     J = np.vstack([a1 - a0, a2 - a0]).T             # Jacobian
     G_inv = np.linalg.inv(J.T @ J)                  # Gram matrix
     grad_b = np.array([[-1, -1], [1, 0], [0, 1]])   # Gradients of nodal basis in reference triangle
@@ -67,7 +67,7 @@ def mass_edge_local(nodes: np.ndarray) -> np.ndarray:
 def mass_vol_local(nodes: np.ndarray) -> float:
     """
     Creates the local mass matrix of volume basis functions.
-    :param nodes: Triangle nodes in 2D. Matrix of size ``(2,3)``.
+    :param nodes: Triangle nodes in 2D. Matrix of size ``(3,2)``.
     :return: Local scalar mass matrix.
     """
 

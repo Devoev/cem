@@ -11,17 +11,12 @@ if __name__ == '__main__':
     generate_mesh(8, 10, 0, 15)
     msh = make_mesh()
 
-    nodes = np.array([[0,1,0], [0,0,1]]).T
+    nodes = np.array([[0,0], [1,0], [0,1]])
     # nodes = np.array([[0,0], [2,0], [2,6]]).T
 
     load_vec = load_node_local(lambda p: 1, nodes, 1)
+    print(nodes.shape)
+    print(msh.nodes.shape)
 
-    # M = mass_node(msh).toarray()
-    # K = stiffness_node(msh).toarray()
-    # plt.spy(M, markersize=0.1)
-    # plt.figure()
-    # plt.spy(K, markersize=0.1)
-    # plt.show()
-    #
-    # print(M.shape)
-    # print(np.linalg.matrix_rank(M))
+    m_node = mass_node_local(nodes)
+    m_edge = mass_edge_local(nodes)
