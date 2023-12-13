@@ -43,10 +43,10 @@ def mass_edge_local(nodes: np.ndarray) -> np.ndarray:
 
     a0, a1, a2 = nodes
     nodes_ref = np.array([[0,0],[1,0],[0,1]]).T
-    J = np.vstack([a1 - a0, a2 - a0])               # Jacobian
-    J_inv = np.linalg.inv(J.T)                      # Inverse transpose Jacobian
+    S = area_triangle_2d(nodes.T)                   # Triangle area = jacobian determinant
+    J = np.vstack([a1 - a0, a2 - a0]).T             # Jacobian
+    G_inv = np.linalg.inv(J.T @ J)                  # Gram matrix
     grad_b = np.array([[-1, -1], [1, 0], [0, 1]])   # Gradients of nodal basis in reference triangle
-    grad_b_ref = J_inv @ grad_b.T                   # Gradients on reference triangle
 
     b: List[Callable[[np.ndarray], float]] = [lambda p: 1 - p[0] - p[1], lambda p: p[0], lambda p: p[1]]
     mat = np.zeros((3,3))
@@ -54,12 +54,12 @@ def mass_edge_local(nodes: np.ndarray) -> np.ndarray:
         for j in range(3):
             def bij(l: int, p: np.ndarray) -> np.ndarray:
                 k = (l+1) % 3
-                return b[l](p) * grad_b_ref[:,k] - b[k](p) * grad_b_ref[:,l]
+                return b[l](p) * grad_b[k,:] - b[k](p) * grad_b[l,:]
 
             def fun(p: np.ndarray) -> float:
-                return np.dot(bij(i, p), bij(j, p))
+                return np.dot(bij(i, p), G_inv @ bij(j, p))
 
-            mat[i,j] = int_triangle_2d(fun, nodes_ref)
+            mat[i,j] = 2 * S * int_triangle_2d(fun, nodes_ref)
 
     return mat
 
