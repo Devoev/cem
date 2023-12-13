@@ -10,10 +10,10 @@ class Mesh2D:
     """2-dimensional triangular mesh. Nodes are index from ``0:N-1`` and elements from ``0:T-1``."""
 
     nodes: np.ndarray
-    """Node coordinate matrix. Array of size ``(N,2)``"""
+    """Node coordinate matrix. Array of size ``(N,2)``."""
 
     elems_to_nodes: np.ndarray
-    """Element to node connection matrix. Array of size ``(T,3)``"""
+    """Element to node connection matrix. Array of size ``(T,3)``."""
 
     def __post_init__(self):
         self.N = self.nodes.shape[0]
@@ -21,12 +21,12 @@ class Mesh2D:
 
     @cached_property
     def elems(self):
-        """Element coordinate array of size ``(T,3,2)``"""
+        """Element coordinate array of size ``(T,3,2)``."""
         return self.nodes[self.elems_to_nodes]
 
     @cached_property
     def edges_to_nodes(self):
-        """Edge to node connection matrix. Array of size ``(E,2)``"""
+        """Edge to node connection matrix. Array of size ``(E,2)``."""
         edges = np.concatenate([
             self.elems_to_nodes[:, [0,1]],
             self.elems_to_nodes[:, [1,2]],
@@ -36,8 +36,13 @@ class Mesh2D:
 
     @cached_property
     def edges(self):
-        """Edge coordinate array of size ``(E,2,2)``"""
+        """Edge coordinate array of size ``(E,2,2)``."""
         return self.nodes[self.edges_to_nodes]
+
+    @cached_property
+    def elems_to_edges(self):
+        """Element to edge connection matrix. Array of size ``(T,3)``."""
+        return  # TODO
 
 
 def make_mesh() -> Mesh2D:
