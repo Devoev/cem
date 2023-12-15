@@ -18,5 +18,6 @@ def plot_pot(msh: Mesh2D, pot: np.ndarray, xlabel='$x$ (m)', ylabel='$y$ (m)', t
     plt.xlabel(xlabel)
     plt.ylabel(ylabel)
     plt.title(title)
+    plt.axis('scaled')
     plt.colorbar()
     plt.show()
