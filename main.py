@@ -13,6 +13,9 @@ if __name__ == '__main__':
     generate_mesh(8, 10, 0, 15)
     msh = make_mesh()
 
+    p = msh.find_node(np.array([0,0]))
+    print(p)
+
     # # nodes = np.array([[0,0], [1,0], [0,1]])
     # nodes = np.array([[0,0], [2,0], [2,6]])
     #
@@ -33,5 +36,5 @@ if __name__ == '__main__':
     # plt.spy(m_edge, markersize=0.1)
     # plt.show()
 
-    f = load_node(msh, lambda p: p[0] + p[1], 1)
-    print(f.shape)
+    # f = load_node(msh, lambda p: p[0] + p[1], 1)
+    # print(f.shape)

@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 from functools import cached_property
+from typing import Tuple
 
 import gmsh
 import numpy as np
@@ -29,6 +30,16 @@ class Mesh2D:
     def y(self):
         """``y``-coordinates of nodes."""
         return self.nodes[:, 1]
+
+    def find_node(self, p: np.ndarray) -> Tuple[np.ndarray, int]:
+        """
+        Finds the nearest node to the given node ``p``
+
+        :param p: Node coordinates. Array of size ``2``.
+        :return: Node coordinates and node index.
+        """
+        node = np.argmin(np.linalg.norm(self.nodes - p, axis=1))
+        return self.nodes[node], node
 
     @cached_property
     def elems(self):
