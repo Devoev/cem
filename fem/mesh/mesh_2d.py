@@ -74,12 +74,7 @@ class Mesh2D:
     @cached_property
     def edges_bnd(self):
         """Edge indices on the boundary. Array of size smaller than ``(E)``."""
-
-        arr = []    # FIXME: Remove loop
-        for e in range(self.E):
-            if self.edges_to_elems[e,1] == -1:
-                arr.append(e)
-        return np.array(arr)
+        return np.where(self.edges_to_elems == -1)[0]
 
     def find_edge_by_nodes(self, n1: int, n2: int) -> int:
         """
