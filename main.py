@@ -13,9 +13,5 @@ if __name__ == '__main__':
     generate_mesh(8, 10, 0, 15)
     msh = make_mesh()
 
-    print(msh.edges_to_elems)
-    mat = msh.edges_to_elems
-    for i in range(2932):
-        print(mat[i,:])
-
-    print(msh.edges_bnd)
+    elems = msh.edges_to_elems
+    bnd = msh.edges_bnd

@@ -62,7 +62,7 @@ class Mesh2D:
         Edge to element connection matrix. Array of size ``(E,2)``.
         Contains ``-1`` entries if edge doesn't have an element.
         """
-        # FIXME: Remove list concatenation
+
         arr = np.array([self.find_elems_by_edge(e) for e in range(self.E)])
         return np.reshape(arr, (self.E,2))
 
@@ -105,19 +105,11 @@ class Mesh2D:
         :return: Indices of elements. If 2nd element doesn't exist ``-1``.
         """
 
-        t1 = t2 = -1
-        n = self.edges_to_nodes[e]
-
-        for t in range(self.T):  # FIXME make this faster by new implementation
-            if not set(n).issubset(self.elems_to_nodes[t]):
-                continue
-
-            if t1 == -1:
-                t1 = t
-            else:
-                t2 = t
-
-        return t1, t2
+        n1, n2 = self.edges_to_nodes[e]
+        i1, _ = np.where(n1 == self.elems_to_nodes)
+        i2, _ = np.where(n2 == self.elems_to_nodes)
+        elems = i1[np.isin(i1, i2)]
+        return [elems[0], -1] if elems.size == 1 else elems
 
 
 def make_mesh() -> Mesh2D:
