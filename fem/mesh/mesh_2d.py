@@ -57,9 +57,29 @@ class Mesh2D:
         return np.unique(np.sort(edges), axis=0)
 
     @cached_property
+    def edges_to_elems(self):
+        """
+        Edge to element connection matrix. Array of size ``(E,2)``.
+        Contains ``-1`` entries if edge doesn't have an element.
+        """
+        # FIXME: Remove list concatenation
+        arr = np.array([self.find_elems_by_edge(e) for e in range(self.E)])
+        return np.reshape(arr, (self.E,2))
+
+    @cached_property
     def edges(self):
         """Edge coordinate array of size ``(E,2,2)``."""
         return self.nodes[self.edges_to_nodes]
+
+    @cached_property
+    def edges_bnd(self):
+        """Edge indices on the boundary. Array of size smaller than ``(E)``."""
+
+        arr = []    # FIXME: Remove loop
+        for e in range(self.E):
+            if self.edges_to_elems[e,1] == -1:
+                arr.append(e)
+        return np.array(arr)
 
     def find_edge_by_nodes(self, n1: int, n2: int) -> int:
         """
@@ -73,11 +93,31 @@ class Mesh2D:
     def find_edges_by_elem(self, t: int):
         """
         Finds the edges of the element ``t``.
-        :return: Indices of elements.
+        :return: Indices of edges.
         """
 
         n1, n2, n3 = self.elems_to_nodes[t]
         return self.find_edge_by_nodes(n1, n2), self.find_edge_by_nodes(n2, n3), self.find_edge_by_nodes(n3, n1)
+
+    def find_elems_by_edge(self, e: int):
+        """
+        Finds the possibly 2 elements containing the edge ``e``.
+        :return: Indices of elements. If 2nd element doesn't exist ``-1``.
+        """
+
+        t1 = t2 = -1
+        n = self.edges_to_nodes[e]
+
+        for t in range(self.T):  # FIXME make this faster by new implementation
+            if not set(n).issubset(self.elems_to_nodes[t]):
+                continue
+
+            if t1 == -1:
+                t1 = t
+            else:
+                t2 = t
+
+        return t1, t2
 
 
 def make_mesh() -> Mesh2D:
@@ -93,8 +133,8 @@ def make_mesh() -> Mesh2D:
     # Elems
     element_types, _, node_tags_elements = msh.get_elements()
     idx = np.where(element_types == 2)[0][0]  # Index of triangle elements
-    elems_to_notes = node_tags_elements[idx] - 1  # Get correct elements and shift 1 -> 0
-    T = int(elems_to_notes.size / 3)
-    elems_to_notes = np.reshape(elems_to_notes, (T, 3))
+    elems_to_nodes = node_tags_elements[idx] - 1  # Get correct elements and shift 1 -> 0
+    T = int(elems_to_nodes.size / 3)
+    elems_to_nodes = np.reshape(elems_to_nodes, (T, 3))
 
-    return Mesh2D(nodes, elems_to_notes)
+    return Mesh2D(nodes, elems_to_nodes)

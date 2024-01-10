@@ -13,28 +13,9 @@ if __name__ == '__main__':
     generate_mesh(8, 10, 0, 15)
     msh = make_mesh()
 
-    p = msh.find_node(np.array([0,0]))
-    print(p)
+    print(msh.edges_to_elems)
+    mat = msh.edges_to_elems
+    for i in range(2932):
+        print(mat[i,:])
 
-    # # nodes = np.array([[0,0], [1,0], [0,1]])
-    # nodes = np.array([[0,0], [2,0], [2,6]])
-    #
-    # J = jacobian(nodes)
-    # grad_b = basis_node_ref_grad()
-    #
-    # load_vec = load_node_local(lambda p: 1, nodes, 1)
-    # m_node_l = mass_node_local(nodes)
-    # m_edge_l = mass_edge_local(nodes)
-
-    # m_node = mass_node(msh)
-    # m_edge = mass_edge(msh)
-    #
-    # plt.figure()
-    # plt.spy(m_node, markersize=0.1)
-    # plt.show()
-    # plt.figure()
-    # plt.spy(m_edge, markersize=0.1)
-    # plt.show()
-
-    # f = load_node(msh, lambda p: p[0] + p[1], 1)
-    # print(f.shape)
+    print(msh.edges_bnd)
