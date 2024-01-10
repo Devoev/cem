@@ -46,6 +46,18 @@ class Mesh2D:
         """Element coordinate array of size ``(T,3,2)``."""
         return self.nodes[self.elems_to_nodes]
 
+    def find_elems_by_edge(self, e: int):
+        """
+        Finds the possibly 2 elements containing the edge ``e``.
+        :return: Indices of elements. If 2nd element doesn't exist ``-1``.
+        """
+
+        n1, n2 = self.edges_to_nodes[e]
+        i1, _ = np.where(n1 == self.elems_to_nodes)
+        i2, _ = np.where(n2 == self.elems_to_nodes)
+        elems = i1[np.isin(i1, i2)]
+        return [elems[0], -1] if elems.size == 1 else elems
+
     @cached_property
     def edges_to_nodes(self):
         """Edge to node connection matrix. Array of size ``(E,2)``."""
@@ -93,18 +105,6 @@ class Mesh2D:
 
         n1, n2, n3 = self.elems_to_nodes[t]
         return self.find_edge_by_nodes(n1, n2), self.find_edge_by_nodes(n2, n3), self.find_edge_by_nodes(n3, n1)
-
-    def find_elems_by_edge(self, e: int):
-        """
-        Finds the possibly 2 elements containing the edge ``e``.
-        :return: Indices of elements. If 2nd element doesn't exist ``-1``.
-        """
-
-        n1, n2 = self.edges_to_nodes[e]
-        i1, _ = np.where(n1 == self.elems_to_nodes)
-        i2, _ = np.where(n2 == self.elems_to_nodes)
-        elems = i1[np.isin(i1, i2)]
-        return [elems[0], -1] if elems.size == 1 else elems
 
 
 def make_mesh() -> Mesh2D:
