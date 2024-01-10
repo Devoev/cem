@@ -31,6 +31,11 @@ class Mesh2D:
         """``y``-coordinates of nodes."""
         return self.nodes[:, 1]
 
+    @cached_property
+    def nodes_bnd(self):
+        """Node indices on the boundary. Array of size smaller than ``(N)``."""
+        return np.unique(self.edges_to_nodes[self.edges_bnd])
+
     def find_node(self, p: np.ndarray) -> Tuple[np.ndarray, int]:
         """
         Finds the nearest node to the given node ``p``

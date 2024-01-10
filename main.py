@@ -15,3 +15,4 @@ if __name__ == '__main__':
 
     elems = msh.edges_to_elems
     bnd = msh.edges_bnd
+    bnd_n = msh.nodes_bnd
