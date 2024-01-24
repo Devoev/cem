@@ -7,7 +7,11 @@ cad = gmsh.model.occ
 msh = gmsh.model.mesh
 
 
-@gmsh_model("capacitor", dim=2, finalize=False, options={"Mesh.MeshSizeFactor": 1})
+NUM_NODES_PLATE = 30
+"""The number of nodes for the plate discretization."""
+
+
+@gmsh_model("capacitor", dim=2, finalize=False, options={"Mesh.MeshSizeFactor": 0.5})
 def generate_mesh(d: float, l: float, h: float, r: float):
     """
     Generates the capacitor mesh.
@@ -44,8 +48,8 @@ def add_plate(d: float, l: float, h: float) -> int:
     l4 = cad.add_line(p4, p1)
 
     cad.synchronize()
-    msh.set_transfinite_curve(l1, 30)
-    msh.set_transfinite_curve(l3, 30)
+    msh.set_transfinite_curve(l1, NUM_NODES_PLATE)
+    msh.set_transfinite_curve(l3, NUM_NODES_PLATE)
     return cad.add_curve_loop([l1, l2, l3, l4])
 
 
@@ -59,5 +63,5 @@ def add_thin_plate(d: float, l: float) -> int:
     l1 = cad.add_line(p1, p2)
 
     cad.synchronize()
-    msh.set_transfinite_curve(l1, 30)
+    msh.set_transfinite_curve(l1, NUM_NODES_PLATE)
     return cad.add_curve_loop([l1, -l1])
