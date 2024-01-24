@@ -1,5 +1,6 @@
 import gmsh
 
+from capacitor.region import Region
 from util.gmsh_model import gmsh_model
 
 cad = gmsh.model.occ
@@ -18,6 +19,10 @@ def generate_mesh(d: float, l: float, h: float, r: float):
 
     plate1 = add_thin_plate(d, l) if h == 0 else add_plate(d, l, h)
     plate2 = add_thin_plate(-d, l) if h == 0 else add_plate(-d, l, -h)
+
+    cad.synchronize()
+    gmsh.model.add_physical_group(1, [plate1], Region.PLATE_1, "Plate 1")
+    gmsh.model.add_physical_group(1, [plate2], Region.PLATE_2, "Plate 2")
 
     air = cad.add_circle(0, 0, 0, r)
     air = cad.add_curve_loop([air])
