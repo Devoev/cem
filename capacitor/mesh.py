@@ -12,7 +12,7 @@ NUM_NODES_PLATE = 30
 
 
 @gmsh_model("capacitor", dim=2, finalize=False, options={"Mesh.MeshSizeFactor": 0.5})
-def generate_mesh(d: float, l: float, h: float, r: float):
+def gen_capacitor(d: float, l: float, h: float, r: float):
     """
     Generates the capacitor mesh.
     :param d: Distance of the capacitor plates.
