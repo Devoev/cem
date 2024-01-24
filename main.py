@@ -12,7 +12,3 @@ from util.geo import jacobian
 if __name__ == '__main__':
     generate_mesh(8, 10, 0, 15)
     msh = make_mesh()
-
-    elems = msh.edges_to_elems
-    bnd = msh.edges_bnd
-    bnd_n = msh.nodes_bnd

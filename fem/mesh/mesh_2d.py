@@ -118,9 +118,10 @@ def make_mesh() -> Mesh2D:
     msh = gmsh.model.mesh
 
     # Nodes
-    _, nodes, _ = msh.get_nodes()
+    node_tags, nodes, _ = msh.get_nodes()
     N = int(nodes.size / 3)
     nodes = np.reshape(nodes, (N, 3))[:, 0:2]
+    nodes = nodes[np.argsort(node_tags - 1)]  # Sort node coords in index order an shift 1 -> 0
 
     # Elems
     element_types, _, node_tags_elements = msh.get_elements()
