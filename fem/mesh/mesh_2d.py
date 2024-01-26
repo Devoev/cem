@@ -8,7 +8,7 @@ import numpy as np
 
 @dataclass
 class Mesh2D:
-    """2-dimensional triangular mesh. Nodes are index from ``0:N-1`` and elements from ``0:T-1``."""
+    """2-dimensional triangular mesh. Nodes are indexed from ``0:N-1`` and elements from ``0:T-1``."""
 
     nodes: np.ndarray
     """Node coordinate matrix. Array of size ``(N,2)``."""
