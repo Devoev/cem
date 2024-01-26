@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 from functools import cached_property
-from typing import Tuple
+from typing import Tuple, Dict
 
 import gmsh
 import numpy as np
@@ -15,6 +15,9 @@ class Mesh2D:
 
     elems_to_nodes: np.ndarray
     """Element to node connection matrix. Array of size ``(T,3)``."""
+
+    groups_to_nodes: Dict[int, np.ndarray]
+    """Group to node dictionary."""
 
     def __post_init__(self):
         self.N = self.nodes.shape[0]
@@ -81,7 +84,7 @@ class Mesh2D:
         """
 
         arr = np.array([self.find_elems_by_edge(e) for e in range(self.E)])
-        return np.reshape(arr, (self.E,2))
+        return np.reshape(arr, (self.E, 2))
 
     @cached_property
     def edges(self):
@@ -92,6 +95,13 @@ class Mesh2D:
     def edges_bnd(self):
         """Edge indices on the boundary. Array of size smaller than ``(E)``."""
         return np.where(self.edges_to_elems == -1)[0]
+
+    def find_nodes_by_group(self, tag: int) -> np.ndarray:
+        """
+        Finds the nodes of the given physical group ``tag``.
+        :return: Indices of nodes.
+        """
+        return self.groups_to_nodes[tag]
 
     def find_edge_by_nodes(self, n1: int, n2: int) -> int:
         """
@@ -115,7 +125,8 @@ class Mesh2D:
 def make_mesh() -> Mesh2D:
     """Creates an instance of a ``Mesh2D`` object using the currently active ``gmsh`` instance."""
 
-    msh = gmsh.model.mesh
+    model = gmsh.model
+    msh = model.mesh
 
     # Nodes
     node_tags, nodes, _ = msh.get_nodes()
@@ -130,4 +141,6 @@ def make_mesh() -> Mesh2D:
     T = int(elems_to_nodes.size / 3)
     elems_to_nodes = np.reshape(elems_to_nodes, (T, 3))
 
-    return Mesh2D(nodes, elems_to_nodes)
+    # Physical groups
+    groups = {tag: msh.get_nodes_for_physical_group(dim, tag)[0] - 1 for (dim, tag) in model.get_physical_groups()}
+    return Mesh2D(nodes, elems_to_nodes, groups)
