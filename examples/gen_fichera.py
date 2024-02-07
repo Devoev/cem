@@ -6,7 +6,7 @@ cad = gmsh.model.occ
 msh = gmsh.model.mesh
 
 
-@gmsh_model("fichera", dim=2, finalize=False, options={"Mesh.MeshSizeFactor": 0.3, "Mesh.MeshSizeMax": 0.3})
+@gmsh_model("fichera", dim=2, finalize=False, options={"Mesh.MeshSizeFactor": 0.1, "Mesh.MeshSizeMax": 0.3})
 def gen_fichera():
     """Creates the fichera geometry."""
 
