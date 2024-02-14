@@ -25,3 +25,8 @@ def gen_fichera():
     boundary = cad.add_curve_loop([l1, l2, l3, l4, l5, l6])
     cad.add_plane_surface([boundary])
     cad.synchronize()
+
+
+if __name__ == '__main__':
+    gen_fichera()
+    gmsh.write("fichera.msh")

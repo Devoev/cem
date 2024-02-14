@@ -20,3 +20,8 @@ def gen_unit_square():
     boundary = cad.add_curve_loop([l1, l2, l3, l4])
     cad.add_plane_surface([boundary])
     cad.synchronize()
+
+
+if __name__ == '__main__':
+    gen_unit_square()
+    gmsh.write("unit_square.msh")
